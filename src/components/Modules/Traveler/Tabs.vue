@@ -1,0 +1,58 @@
+<template>
+  <ion-page>
+    <ion-tabs @ionTabsWillChange="beforeTabChange" @ionTabsDidChange="afterTabChange">
+      <IonSplitPane content-id="main-content">
+        <ion-router-outlet  id="main-content"></ion-router-outlet>
+        <Menu/>
+      </IonSplitPane>
+      <ion-tab-bar slot="bottom">
+        <ion-tab-button tab="schedule" href="/tabs/schedule">
+          <ion-icon :icon="calendar"></ion-icon>
+          <ion-label>Schedule</ion-label>
+          <ion-badge>6</ion-badge>
+        </ion-tab-button>
+
+        <ion-tab-button tab="speakers" href="/tabs/speakers">
+          <ion-icon :icon="personCircle"></ion-icon>
+          <ion-label>Speakers</ion-label>
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
+  </ion-page>
+</template>
+
+<script>
+import {defineComponent} from 'vue';
+import {
+  IonIcon,
+  IonLabel,
+  IonPage,
+  IonTabBar,
+  IonTabButton,
+  IonTabs,
+  IonBadge,
+  IonRouterOutlet,
+  IonSplitPane
+} from '@ionic/vue';
+import {calendar, personCircle} from 'ionicons/icons';
+import Menu from './Menu.vue'
+
+export default defineComponent({
+  components: {IonIcon, Menu, IonLabel, IonSplitPane, IonPage, IonTabBar, IonTabButton, IonTabs, IonBadge, IonRouterOutlet},
+  name: 'TabsComponent',
+  setup() {
+    const beforeTabChange = () => {
+      // do something before tab change
+    }
+    const afterTabChange = () => {
+      // do something after tab change
+    }
+    return {
+      calendar,
+      personCircle,
+      beforeTabChange,
+      afterTabChange
+    }
+  }
+});
+</script>

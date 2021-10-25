@@ -1,0 +1,7 @@
+{
+  "name": "country-traveler",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}

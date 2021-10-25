@@ -1,0 +1,28 @@
+<ion-page style="margin-bottom: 50px">
+    <Header/>
+    <ion-content :fullscreen="true">
+
+        <ion-grid>
+            <ion-row>
+                <ion-col size="6" v-for="c in 5">
+                    <Category/>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+        <swiper :slidesPerView="2"
+                :centeredSlides="true"
+                :spaceBetween="10"
+                :pagination='{ "clickable": true}'
+                navigation
+                :freeMode="true"
+                :scrollbar="{ draggable: true }"
+                @swiper="onSwiper"
+                @slideChange="onSlideChange">
+            <swiper-slide :key="index"
+                          :virtualIndex="index"
+                          v-for="(c, index) in 5">
+                <Category/>
+            </swiper-slide>
+        </swiper>
+    </ion-content>
+</ion-page>
