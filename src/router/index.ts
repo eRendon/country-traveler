@@ -1,11 +1,16 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
 import Tabs from '@/components/Modules/Traveler/Tabs.vue'
+import home from '@/views/home.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/home/index'
+    redirect: '/index'
+  },
+  {
+    path: '/index',
+    component: home
   },
   {
     path: '/home/',
@@ -27,7 +32,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: 'tab3',
-        component: () => import('@/views/Tab3.vue')
+        component: () => import('@/views/home.vue')
       },
       {
         path: '/folder/:id',

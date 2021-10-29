@@ -15,7 +15,7 @@ const jsonToURLEncoded = (jsonString: any) => {
         .join('&')
 }
 
-export class AxiosService<T, P> {
+export default class AxiosService<T, P> {
     async postData (postData: P, url: string): Promise<ISurePromise<T, P>> {
         try {
             return await surePromise(apiClient.post<AxiosResponse>(url, postData))

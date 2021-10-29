@@ -22,7 +22,7 @@
 <!--        <ion-note>hi@ionicframework.com</ion-note>-->
 
         <ion-menu-toggle auto-hide="false" v-for="(p, i) in appPages" :key="i">
-          <ion-item v-if="p.show" @click="selectedIndex = i" router-direction="root" :router-link="p.url" lines="none" detail="false" class="hydrated" :class="{ selected: selectedIndex === i }">
+          <ion-item v-if="p.show" @click="validateNavigation(i, p)"  lines="none" detail="false" class="hydrated" :class="{ selected: selectedIndex === i }">
             <ion-icon slot="start" :ios="p.iosIcon" :md="p.mdIcon"></ion-icon>
             <ion-label>{{ p.name }}</ion-label>
           </ion-item>
@@ -38,11 +38,18 @@
         </ion-item>
       </ion-list>
     </ion-content>
+    <ion-modal  :is-open="isOpenRef"
+                css-class="signInModal"
+                :swipe-to-close="true"
+                :presenting-element="$parent.$refs.ionRouterOutlet"
+                @didDismiss="setOpen(false)">
+      <component :is="component.is"></component>
+    </ion-modal>
   </ion-menu>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, computed, shallowRef, triggerRef } from 'vue'
 import {
   archiveOutline,
   archiveSharp,
@@ -60,7 +67,7 @@ import {
   warningSharp,
     homeSharp
 } from 'ionicons/icons'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import {
   IonContent,
   IonIcon,
@@ -70,16 +77,29 @@ import {
   IonListHeader,
   IonMenu,
   IonMenuToggle,
-    IonAvatar
+    IonAvatar,
+    IonModal
 } from '@ionic/vue'
-
-import { computed } from 'vue'
 import { IAuth } from '@/interfaces/IAuth'
 import { authStore } from '@/store'
+import login from '@/views/auth/login.vue'
+import { modal } from '@/controllers'
+import Login from '@/views/auth/login.vue'
+
+interface Menu {
+  title: string;
+  name: string;
+  url?: string;
+  component?: any;
+  iosIcon: string;
+  mdIcon: string;
+  show: boolean;
+}
 
 export default defineComponent({
   name: "Menu",
   components: {
+    Login,
     IonContent,
     IonIcon,
     IonItem,
@@ -88,14 +108,21 @@ export default defineComponent({
     IonListHeader,
     IonMenu,
     IonMenuToggle,
-    IonAvatar
+    IonAvatar,
+    IonModal
   },
   setup () {
+    const isOpenRef = ref(false);
+    const setOpen = (state: boolean) => isOpenRef.value = state;
+    const component = shallowRef({
+      is: login
+    })
+
     const selectedIndex = ref(0);
 
     const auth = computed<IAuth>(() => authStore.getters.getStateAuth())
 
-    const appPages = computed(() => {
+    const appPages = computed<Menu[]>(() => {
       return [
         {
           title: 'Index',
@@ -116,7 +143,7 @@ export default defineComponent({
         {
           title: 'Login',
           name: 'Iniciar Sesión',
-          url: '/login',
+          component: login,
           iosIcon: paperPlaneOutline,
           mdIcon: paperPlaneSharp,
           show: !auth.value.isLogged
@@ -164,12 +191,29 @@ export default defineComponent({
     }
 
     const route = useRoute();
+    const router = useRouter()
+
+    const validateNavigation = (index: number, menu: Menu): void => {
+      selectedIndex.value = index
+      if (menu.url) {
+        router.push(menu.url)
+        return
+      }
+      component.value.is = menu.component
+      triggerRef(component)
+      setOpen(true)
+      // modal.modal(menu.component)
+    }
 
     return {
+      component,
+      isOpenRef,
+      setOpen,
       auth,
       selectedIndex,
       appPages,
       labels,
+      validateNavigation,
       archiveOutline,
       archiveSharp,
       bookmarkOutline,
@@ -202,4 +246,6 @@ ion-item.selected {
   @apply pl-2;
   background: url('/assets/shapes.svg') no-repeat center center;
 }
+
+
 </style>

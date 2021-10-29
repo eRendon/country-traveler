@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router';
 
 import '@/assets/tailwind.css'
+import '@/assets/index.scss'
 
 import { IonicVue } from '@ionic/vue';
 

@@ -1,67 +1,62 @@
 <template>
-  <ion-page>
+  <ion-content>
     <form @submit.prevent="handleLogin">
-      <ion-card>
+
+      <ion-list
+          no-lines="">
+        <div class="login-top">
+          <h2 class="ion-text-center"><span>
+              <img alt="" src="assets/shapes.svg">
+        </span></h2>
+          <!--            <h4 style="margin-top: 2%;" class="ion-text-center textw-white">-->
+          <!--              Company Name-->
+          <!--            </h4>-->
+        </div>
         <ion-item>
-          <h3>Please Sign In!</h3>
-        </ion-item>
-        <ion-item>
-          <ion-label position="floating">Username</ion-label>
-          <ion-input v-model="form.username" id="username" required></ion-input>
+          <ion-label position="floating">Email</ion-label>
+          <ion-input required  type="email"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label position="floating">Password</ion-label>
-          <ion-input type="password" v-model="form.password" id="password" required></ion-input>
+          <ion-input required  type="password"></ion-input>
         </ion-item>
-        <ion-item>
-          <ion-button type="submit" shape="round">
-            Sign In
-            <ion-icon slot="end" :icon="logIn"></ion-icon>
-          </ion-button>
-        </ion-item>
-        <ion-item>
-          <p>Or</p>
-        </ion-item>
-        <ion-item>
-          <ion-button type="button" shape="round" router-link="/signup">
-            Sign Up
-            <ion-icon slot="end" :icon="personAdd"></ion-icon>
-          </ion-button>
-        </ion-item>
-      </ion-card>
+        <ion-button type="submit" class="mt-10" expand="block">Sign in</ion-button>
+
+      </ion-list>
+
+
     </form>
-  </ion-page>
+  </ion-content>
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from "vue";
+import { defineComponent, ref } from 'vue';
 import {
-  IonPage,
-  IonIcon,
+  IonLabel,
   IonButton,
   IonItem,
-  IonCard,
   IonInput,
-  IonLabel
+  IonList,
+  IonContent
 } from '@ionic/vue'
 
 import {
-    logIn,
-    personAdd
+  logIn,
+  personAdd
 } from 'ionicons/icons'
 import { authRequest } from '@/api-client'
+import { alert } from '@/controllers'
 
 export default defineComponent({
   name: 'Login',
   components: {
-    IonPage,
-    IonIcon,
     IonButton,
+    IonLabel,
     IonItem,
-    IonCard,
     IonInput,
-    IonLabel
+    IonList,
+    IonContent
   },
   setup () {
 
@@ -73,9 +68,14 @@ export default defineComponent({
     const handleLogin = async (): Promise<void> => {
       const { data, success } = await authRequest.logIn(form.value.username, form.value.password)
       console.log(data)
+      console.log(success)
       if (success) {
         console.log(data)
+        return
       }
+      await alert.presentAlert({
+        message: 'Email o contraseña incorecta'
+      })
     }
 
     return {
@@ -88,6 +88,6 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
 </style>
