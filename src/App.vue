@@ -11,18 +11,39 @@
 import { IonApp,
   IonRouterOutlet,
   IonSplitPane } from '@ionic/vue';
-import { defineComponent } from 'vue';
-import Menu from '@/components/Modules/Traveler/Menu.vue'
+import { defineComponent, onMounted } from 'vue';
+import Menu from '@/components/Menu/Menu.vue'
+import { authStore, userStore } from '@/store'
+import apiClient from '@/api-client/axios/config'
+import { IAccount } from '@/interfaces/IAccount'
+
 export default defineComponent({
   name: 'App',
   components: {
     IonApp,
     Menu, IonSplitPane, IonRouterOutlet
   },
+  setup () {
+    const initData = (): void => {
+      const profile = localStorage.getItem('profile')
+      if (profile) {
+        console.log('init', profile)
+        apiClient.defaults.headers.common['Authorization'] = `Bearer ${(JSON.parse(profile) as IAccount).jwtToken}`
+        userStore.mutations.setProfile(JSON.parse(profile))
+        authStore.mutations.setStateAuth(true)
+      }
+    }
+
+
+    onMounted(() => {
+      initData()
+    })
+  }
 })
 </script>
 
 <style scoped lang="scss">
+
 ion-menu ion-content {
   --background: var(--ion-item-background, var(--ion-background-color, #fff));
 }

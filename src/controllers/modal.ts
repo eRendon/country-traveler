@@ -13,5 +13,8 @@ export default {
         const modal = await modalController.create(modalOptions)
 
         await modal.present()
+    },
+    async dismiss (): Promise<void> {
+        await modalController.dismiss()
     }
 }

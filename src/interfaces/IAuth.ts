@@ -5,3 +5,8 @@ export interface IAuth {
 export interface IAuthStore {
     auth: IAuth
 }
+
+export interface IFormLogin {
+    email: string
+    password: string
+}

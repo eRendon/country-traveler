@@ -1,9 +1,9 @@
 <template>
   <ion-page>
-    <Header :isDetailComponent="true" :isBackButton="true"/>
+    <Header :name-detail="tourDetail.name" :isDetailComponent="true" :isBackButton="true"/>
     <ion-content class="flex">
       <ion-label>
-        Loren Impsut
+        {{ tourDetail.description }}
       </ion-label>
       <swiper :slidesPerView="2"
               :centeredSlides="true"
@@ -18,16 +18,21 @@
           <ion-img src="assets/shapes.svg"></ion-img>
         </swiper-slide>
       </swiper>
+      <div class="absolute bottom-0 right-2 text-white">
+        <ion-button>COP {{ $filters.formatCurrency(tourDetail.price) }}</ion-button>
+      </div>
     </ion-content>
   </ion-page>
 </template>
 
-<script>
-import Header from '@/components/Modules/Traveler/Header.vue'
-import { defineComponent } from 'vue'
-import { IonPage, IonContent, IonLabel, IonImg } from '@ionic/vue'
+<script lang="ts">
+import Header from '@/components/Header/Header.vue'
+import {defineComponent, onMounted, ref} from 'vue'
+import { IonPage, IonContent, IonLabel, IonImg, IonButton } from '@ionic/vue'
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
+import {useRoute, useRouter} from "vue-router";
+import {ITour} from "@/interfaces/Traveler/ITour";
 
 SwiperCore.use([ Navigation, Pagination, Scrollbar, A11y]);
 
@@ -36,8 +41,24 @@ export default defineComponent({
   components: { Header, IonPage, IonContent, IonLabel, Swiper, SwiperSlide, IonImg },
   setup() {
 
-    return {
+    const route = useRoute()
+    const router = useRouter()
 
+    const tourDetail = ref<ITour>({})
+
+    onMounted(() => {
+      const { tour } = route.params
+      if (!tour) {
+        router.push({
+          name: 'Home'
+        })
+      }
+      tourDetail.value = JSON.parse(tour as string)
+      console.log(route)
+    })
+
+    return {
+      tourDetail
     }
   }
 })

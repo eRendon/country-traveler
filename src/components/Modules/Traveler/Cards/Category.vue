@@ -1,39 +1,60 @@
 <template>
-  <ion-card @click="onDetail">
+  <ion-card @click="onDetail" class="relative">
+    <div v-if="tour.favorite && auth.isLogged"  class="absolute right-1.5 top-1.5">
+      <ion-icon color="dark" :icon="heart"></ion-icon>
+    </div>
+    <div v-else-if="!tour.favorite && auth.isLogged"  class="absolute right-1.5 top-1.5">
+      <ion-icon color="dark" :icon="heartOutline"></ion-icon>
+    </div>
     <img src="assets/shapes.svg"/>
     <div class="title-category">
-      <ion-title>Footer</ion-title>
+      <ion-title>{{ tour.name }}</ion-title>
     </div>
   </ion-card>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import {
   IonCard,
-    IonTitle
-} from "@ionic/vue";
+  IonTitle,
+  IonIcon
+} from '@ionic/vue';
+
+import { heartOutline, heart } from 'ionicons/icons'
 
 import { pin, walk, warning, wifi, wine } from 'ionicons/icons'
 import { useRouter } from 'vue-router'
+import { ITour } from '@/interfaces/Traveler/ITour'
+import { authStore } from '@/store'
 
 export default defineComponent({
   name: 'Category',
-  components: {  IonCard, IonTitle },
-  setup() {
+  props: {
+    tour: {
+      type: Object as () => ITour,
+      default: () => ({}),
+      required: true
+    }
+  },
+  components: { IonCard, IonTitle, IonIcon },
+  setup (props) {
 
     const router = useRouter()
+
+    const auth = computed(() => authStore.getters.getStateAuth())
 
     const onDetail = async (): Promise<void> => {
       await router.push({
         name: 'Detail',
         params: {
-          id: '5'
+          id: props.tour.id,
+          tour: JSON.stringify(props.tour)
         }
       })
     }
 
-    return { warning, wine, wifi, pin, walk, onDetail }
+    return { warning, wine, wifi, pin, walk, onDetail, heartOutline, auth, heart }
   }
 })
 </script>

@@ -2,7 +2,7 @@ import {ISurePromise} from '@/interfaces/ISurePromise'
 import {AxiosResponse} from 'axios'
 import router from '@/router'
 
-const surePromise = <T>(promise: Promise<AxiosResponse>): Promise<ISurePromise<T, any>> => (
+const surePromise = <T>(promise: Promise<AxiosResponse>): Promise<ISurePromise<T>> => (
     promise
         .then((result) => {
             const { data, status, headers } = result

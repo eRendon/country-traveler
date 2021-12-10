@@ -16,7 +16,7 @@ const jsonToURLEncoded = (jsonString: any) => {
 }
 
 export default class AxiosService<T, P> {
-    async postData (postData: P, url: string): Promise<ISurePromise<T, P>> {
+    async postData (postData: P, url: string): Promise<ISurePromise<T>> {
         try {
             return await surePromise(apiClient.post<AxiosResponse>(url, postData))
         } catch (err) {
@@ -25,7 +25,7 @@ export default class AxiosService<T, P> {
         }
     }
 
-    async getData (getData: P, url: string, params?: P): Promise<ISurePromise<T, P>> {
+    async getData (getData: P, url: string, params?: P): Promise<ISurePromise<T>> {
 
         try {
             let dataUrl = ''
@@ -45,7 +45,7 @@ export default class AxiosService<T, P> {
         }
     }
 
-    async putData(putData: P, url: string): Promise<ISurePromise<T, P>> {
+    async putData(putData: P, url: string): Promise<ISurePromise<T>> {
 
         try {
             return surePromise(apiClient.put<AxiosResponse>(url, putData))

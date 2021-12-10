@@ -1,0 +1,42 @@
+<div>
+    <ion-grid>
+        <ion-row>
+            <ion-col>
+                <ion-item>
+                    <ion-label position="floating">Email</ion-label>
+                    <ion-input disabled v-model="profile.email"></ion-input>
+                </ion-item>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>
+                <ion-item>
+                    <ion-label position="floating">Nombre</ion-label>
+                    <ion-input disabled v-model="profile.firstName"></ion-input>
+                </ion-item>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>
+                <ion-item>
+                    <ion-label position="floating">Apellido</ion-label>
+                    <ion-input disabled v-model="profile.lastName"></ion-input>
+                </ion-item>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>
+                <ion-item>
+                    <ion-label position="floating">Título</ion-label>
+                    <ion-input disabled v-model="profile.title"></ion-input>
+                </ion-item>
+            </ion-col>
+            <ion-col>
+                <ion-item>
+                    <ion-label position="floating">Verificado</ion-label>
+                    <ion-input disabled :value="profile.isVerified ? 'Verificado' : 'Sin verificar'"></ion-input>
+                </ion-item>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</div>

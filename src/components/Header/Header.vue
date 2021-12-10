@@ -14,7 +14,7 @@
       <ion-title v-if="!isDetailComponent">title</ion-title>
       <ion-label v-if="!isDetailComponent">Loren impus</ion-label>
       <ion-button v-if="isDetailComponent" class="detail-button-component">
-        Macao Beach
+        {{ nameDetail }}
       </ion-button>
     </div>
   </ion-header>
@@ -45,6 +45,10 @@ export default defineComponent({
     isDetailComponent: {
       type: Boolean,
       default: false
+    },
+    nameDetail: {
+      type: String,
+      default: ''
     }
   },
   components: {

@@ -1,4 +1,4 @@
-export interface ISurePromise <T, P> {
+export interface ISurePromise <T> {
   success: boolean
   data: T
   status: number

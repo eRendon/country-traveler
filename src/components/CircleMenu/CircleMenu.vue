@@ -3,11 +3,13 @@
     <button
         class="menu-btn"
         @click="isToggle"
-        :class="[isShow ? 'open' : 'close']"
-    >
-      <i></i> <i></i> <i></i> <span class="ripple"></span>
+        :class="[isShow ? 'open' : 'close']">
+      <i></i> <i></i> <i></i>
+      <span class="ripple"></span>
     </button>
-
+    <transition name="fade">
+      <ion-label v-if="!isShow" class="init">Iniciar</ion-label>
+    </transition>
     <transition name="move" mode="out-in" appear>
       <ul class="menu" v-show="isShow">
         <li
@@ -16,9 +18,10 @@
             class="menuitem-wrapper"
         >
           <div class="icon-holder">
-            <a href="#" class="menu-item">
-              <ion-icon :icon="item"></ion-icon>
-<!--              <i class="material-icons">{{ item }}</i>-->
+            <a @click="goTo(item.url)" class="menu-item flex flex-col ion-justify-content-center">
+              <ion-icon class=" " :icon="item.icon"></ion-icon>
+              <!--              <ion-label class="text-xs text-white">{{ item.name }}</ion-label>-->
+              <!--              <i class="material-icons">{{ item }}</i>-->
             </a>
           </div>
         </li>
@@ -28,35 +31,86 @@
 </template>
 
 <script lang="ts">
-import { home, logoFacebook, logoAndroid, cart, rocketOutline } from 'ionicons/icons'
+import { home, storefrontOutline, carSportOutline, calendarOutline, airplaneOutline } from 'ionicons/icons'
 import { defineComponent, ref } from 'vue'
-import { IonIcon } from '@ionic/vue'
+import { IonIcon, IonLabel } from '@ionic/vue'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'CircleMenu',
   components: {
-    IonIcon
+    IonIcon,
+    IonLabel
   },
-  setup() {
+  setup () {
     const isShow = ref(false)
-    const menus = ref([home, logoFacebook, logoAndroid, cart, rocketOutline])
 
-    const isToggle = (): void  => {
+    const router = useRouter()
+
+    const menus = ref([
+      {
+        icon: home,
+        name: 'Inicio',
+        url: '/home/index'
+      },
+      {
+        icon: airplaneOutline,
+        name: 'Tours',
+        url: '/travel/index'
+      },
+      {
+        icon: storefrontOutline,
+        name: 'C. Comercial'
+      },
+      {
+        icon: carSportOutline,
+        name: 'Parqueadero'
+      },
+      {
+        icon: calendarOutline,
+        name: 'Reservas'
+      }
+    ])
+
+    const isToggle = (): void => {
       isShow.value = !isShow.value
+    }
+
+    const goTo = async (path: string): Promise<void> => {
+      isShow.value = false
+      await router.push(path)
     }
 
     return {
       isShow,
       menus,
-      isToggle
+      isToggle,
+      goTo
     }
   }
 })
 </script>
 
 <style scoped lang="scss">
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s
+}
+
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */
+{
+  opacity: 0
+}
+
+.init {
+  position: absolute;
+  left: 45%;
+  top: 58%;
+  @apply text-white text-lg;
+}
+
 $spin-speed: 0.7s;
-$color-collection: ("#2980b9", "#c0392b", "#1abc9c", "#f39c12", "#8e44ad");
+$color-collection: ("#141C2C99", "#141C2C99", "#141C2C99", "#141C2C99", "#141C2C99");
 $degFactor: 71.5;
 
 .circle-menu {
@@ -100,11 +154,14 @@ $degFactor: 71.5;
 
     &.spin {
       z-index: 5;
+
       .icon-holder {
         animation: spin $spin-speed linear forwards;
       }
+
       .circle-holder {
         display: block;
+
         circle {
           animation: dash $spin-speed linear forwards;
         }
@@ -118,14 +175,15 @@ $degFactor: 71.5;
     width: 4rem;
     height: 4rem;
     margin-top: 4.5rem;
-    padding: 1rem;
+    padding: 1.1rem;
     border-radius: 100%;
     transform: scale(1, 1);
 
-    i {
+    ion-icon {
       display: inline-block;
       vertical-align: middle;
       line-height: 1.2;
+      color: white;
     }
   }
 }
@@ -169,10 +227,12 @@ $degFactor: 71.5;
     margin: 0 auto;
     background: #2c3e50;
   }
+
   i:nth-child(2) {
     margin: 0.34rem auto;
   }
 }
+
 .ripple {
   position: absolute;
   top: -1rem;
@@ -195,6 +255,7 @@ $degFactor: 71.5;
       transform: rotate(-#{$i * $degFactor}deg);
       background: unquote(nth($color-collection, $i + 1));
     }
+
     circle {
       stroke: unquote(nth($color-collection, $i + 1));
     }
@@ -232,9 +293,11 @@ $degFactor: 71.5;
   i:first-child {
     animation: top-down ease-in 0.2s forwards 1;
   }
+
   i:nth-child(2) {
     animation: middle ease-in 0.01s forwards 1;
   }
+
   i:nth-child(3) {
     animation: down-top ease-in 0.2s forwards 1;
   }
@@ -250,10 +313,11 @@ $degFactor: 71.5;
     transform: rotate(0deg);
   }
   100% {
-    background: lighten(#34495e, 15%);
+    background: lighten(#141C2C99, 70%);
     transform: rotate(-90deg);
   }
 }
+
 @keyframes middle {
   0% {
     opacity: 1;

@@ -4,8 +4,8 @@
 
         <ion-grid>
             <ion-row>
-                <ion-col size="6" v-for="c in 5">
-                    <Category/>
+                <ion-col size="6" v-for="tour in tours">
+                    <Category :tour="tour"/>
                 </ion-col>
             </ion-row>
         </ion-grid>
@@ -24,5 +24,6 @@
                 <Category/>
             </swiper-slide>
         </swiper>
+        <ion-input @change="uploadPhoto($event.target.files)" type="file"></ion-input>
     </ion-content>
 </ion-page>

@@ -6,8 +6,8 @@
           <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
         </ion-avatar>
         <div v-if="auth.isLogged" class="flex flex-col ion-align-self-center ml-5">
-          <ion-label >Item Avatar</ion-label>
-          <ion-label>Item Avatar</ion-label>
+          <ion-label >{{ profile.firstName }} {{ profile.lastName }} </ion-label>
+          <ion-label>{{ profile.title }}</ion-label>
         </div>
       </div>
 <!--      <ion-item class="bg-avatar">-->
@@ -65,7 +65,9 @@ import {
   trashSharp,
   warningOutline,
   warningSharp,
-    homeSharp
+    homeSharp,
+    personOutline,
+    personSharp
 } from 'ionicons/icons'
 import { useRoute, useRouter } from 'vue-router'
 import {
@@ -81,20 +83,11 @@ import {
     IonModal
 } from '@ionic/vue'
 import { IAuth } from '@/interfaces/IAuth'
-import { authStore } from '@/store'
-import login from '@/views/auth/login.vue'
-import { modal } from '@/controllers'
-import Login from '@/views/auth/login.vue'
-
-interface Menu {
-  title: string;
-  name: string;
-  url?: string;
-  component?: any;
-  iosIcon: string;
-  mdIcon: string;
-  show: boolean;
-}
+import { authStore, userStore } from '@/store'
+import Login from '@/components/Auth/Login/Login.vue'
+import Register from '@/components/Auth/Register/Register.vue'
+import { IMenu } from '@/interfaces/IMenu'
+import { IAccount } from '@/interfaces/IAccount'
 
 export default defineComponent({
   name: "Menu",
@@ -115,19 +108,21 @@ export default defineComponent({
     const isOpenRef = ref(false);
     const setOpen = (state: boolean) => isOpenRef.value = state;
     const component = shallowRef({
-      is: login
+      is: Login
     })
+
+    const profile = computed<IAccount>(() => userStore.getters.getProfile())
 
     const selectedIndex = ref(0);
 
     const auth = computed<IAuth>(() => authStore.getters.getStateAuth())
 
-    const appPages = computed<Menu[]>(() => {
+    const appPages = computed<IMenu[]>(() => {
       return [
         {
           title: 'Index',
           name: 'Inicio',
-          url: '/home/index',
+          url: '/index',
           iosIcon: mailOutline,
           mdIcon: homeSharp,
           show: true
@@ -135,7 +130,7 @@ export default defineComponent({
         {
           title: 'Register',
           name: 'Registrarse',
-          url: '/home/login',
+          component: Register,
           iosIcon: paperPlaneOutline,
           mdIcon: paperPlaneSharp,
           show: !auth.value.isLogged
@@ -143,10 +138,18 @@ export default defineComponent({
         {
           title: 'Login',
           name: 'Iniciar Sesión',
-          component: login,
+          component: Login,
           iosIcon: paperPlaneOutline,
           mdIcon: paperPlaneSharp,
           show: !auth.value.isLogged
+        },
+        {
+          title: 'Profile',
+          name: 'Perfil',
+          url: '/profile',
+          iosIcon: personOutline,
+          mdIcon: personSharp,
+          show: auth.value.isLogged
         },
         {
           title: 'Favorites',
@@ -193,7 +196,7 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter()
 
-    const validateNavigation = (index: number, menu: Menu): void => {
+    const validateNavigation = (index: number, menu: IMenu): void => {
       selectedIndex.value = index
       if (menu.url) {
         router.push(menu.url)
@@ -206,6 +209,7 @@ export default defineComponent({
     }
 
     return {
+      profile,
       component,
       isOpenRef,
       setOpen,
