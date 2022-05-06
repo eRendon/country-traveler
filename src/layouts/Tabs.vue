@@ -1,6 +1,7 @@
 <template>
   <ion-page>
-    <ion-tabs @ionTabsWillChange="beforeTabChange" @ionTabsDidChange="afterTabChange">
+    <ion-tabs slot="bottom" @ionTabsWillChange="beforeTabChange" @ionTabsDidChange="afterTabChange">
+      <ion-router-outlet ></ion-router-outlet>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="schedule" href="/tabs/schedule">
           <ion-icon :icon="calendar"></ion-icon>
@@ -27,11 +28,12 @@ import {
   IonTabButton,
   IonTabs,
   IonBadge,
+    IonRouterOutlet
 } from '@ionic/vue';
 import {calendar, personCircle} from 'ionicons/icons';
 
 export default defineComponent({
-  components: {IonIcon, IonLabel, IonPage, IonTabBar, IonTabButton, IonTabs, IonBadge },
+  components: {IonIcon, IonLabel, IonPage, IonTabBar, IonTabButton, IonTabs, IonBadge, IonRouterOutlet },
   name: 'TabsComponent',
   setup() {
     const beforeTabChange = () => {

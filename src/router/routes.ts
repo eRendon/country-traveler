@@ -37,6 +37,11 @@ const routes: Array<RouteRecordRaw> = [
             {
                 path: '/folder/:id',
                 component: () => import ('../views/Folder.vue')
+            },
+            {
+                path: '/agency/:id?',
+                name: 'Agency',
+                component: () => import('../views/modules/traveler/agency/agency.vue')
             }
         ]
     },
